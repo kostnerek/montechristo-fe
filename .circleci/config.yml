@@ -1,3 +1,4 @@
+#CONFIG FOR FE PART
 version: 2.1
 workflows:
     my-workflow:
@@ -13,22 +14,23 @@ jobs:
             - checkout
             - run: |
                   echo "$DOCKERHUB_PASSWORD" | docker login --username kostnerek --password-stdin
-                  docker run -d --name montechristo kostnerek/montechristo-fe
+                  docker run -p 5000:5000 kostnerek/montechristo-fe
 
             # build the application image
-            - run: docker build -t kostnerek/montechristo-fe .
+            - build docker image
+            - run: docker build -f Dockerfile.client -t kostnerek/montechristo-fe .
 
             # deploy the image
-            - run: docker push kostnerek/montechristo
+            - deploy docker image to dockerhub
+            - run: docker push kostnerek/montechristo-fe
             - add_ssh_keys:
                   fingerprints:
                       - "04:f8:a5:21:e4:db:78:be:53:20:be:7c:d0:b3:8e:12"
-            - run: |
-                  ls /home/circleci/.ssh
+            - deploy docker image to remote server
             - run: |
                   ssh lema@20.222.251.245 \<<'ENDSSH' 
-                  sudo docker pull kostnerek/montechristo
-                  sudo docker stop montechristo
-                  sudo docker rm montechristo
-                  sudo docker run --name montechristo -p 80:80 -d kostnerek/montechristo
+                  sudo docker pull kostnerek/montechristo-fe
+                  sudo docker kill nginx_client_1
+                  sudo docker kill nginx_api_1
+                  sudo docker-compose -f /home/lema/docker-compose.yml up
                   ENDSSH
