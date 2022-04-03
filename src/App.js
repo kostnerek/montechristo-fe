@@ -12,7 +12,7 @@ function App() {
 
 	return (
 		<>
-			<div>{currentTime}</div>
+			<div>Current time im [ms]: {currentTime}</div>
 		</>
 	);
 }
