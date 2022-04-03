@@ -1,7 +1,7 @@
 #CONFIG FOR FE PART
 version: 2.1
 workflows:
-    my-workflow:
+    frontend-workflow:
         jobs:
             - build:
                   context:
