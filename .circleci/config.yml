@@ -17,16 +17,13 @@ jobs:
                   docker run -p 5000:5000 kostnerek/montechristo-fe
 
             # build the application image
-            - build docker image
             - run: docker build -f Dockerfile.client -t kostnerek/montechristo-fe .
 
             # deploy the image
-            - deploy docker image to dockerhub
             - run: docker push kostnerek/montechristo-fe
             - add_ssh_keys:
                   fingerprints:
                       - "04:f8:a5:21:e4:db:78:be:53:20:be:7c:d0:b3:8e:12"
-            - deploy docker image to remote server
             - run: |
                   ssh lema@20.222.251.245 \<<'ENDSSH' 
                   sudo docker pull kostnerek/montechristo-fe
