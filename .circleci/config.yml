@@ -1,4 +1,5 @@
 #CONFIG FOR FE PART
+#config for be
 version: 2.1
 workflows:
     frontend-workflow:
@@ -6,6 +7,10 @@ workflows:
             - build:
                   context:
                       - montechristo-env-vars
+                  filters:
+                      branches:
+                          only:
+                              - dev
 
 jobs:
     build:
